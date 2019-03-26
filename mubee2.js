@@ -7,16 +7,18 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </head>
 <body>
-<div id="htchart"></div>
+<!--<div id="htchart"></div>-->
+<div id="chart_div"></div>
 <script>
-google.charts.load('current', {'packages':['line','controls', 'corechart']});
+//google.charts.load('current', {'packages':['line','controls', 'corechart']});
+google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(draw);
 var data, chart;
 var channel_id = 728991;
 var api_key = 'PV8TTYNRTZB1X9SB';
-//var cnt = 0;
-//var points = 14;
-//var got = 0;
+var cnt = 0;
+var points = 14;
+var got = 0;
 var opt = {
     hAxis: {
         title:'Time'
@@ -27,8 +29,9 @@ var opt = {
 };    
 function draw(){
     data = new google.visualization.DataTable();
-    chart = new google.visualization.LineChart(document.getElementById('htchart'));
-    data.addColumn('string','Time');
+    //chart = new google.visualization.LineChart(document.getElementById('htchart'));
+    chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+	data.addColumn('string','Time');
     data.addColumn('number','RMSX');
     data.addColumn('number','RMSY');
     data.addRows([
@@ -38,29 +41,30 @@ function draw(){
 }
 
 function update() {
-  //  if(got == 0){
-    //    got = 1;
+    if(got == 0){
+        got = 1;
         $.get('https://api.thingspeak.com/channels/' + channel_id + '/feed/last.json?api_key=' + api_key, function(field,s){
-      //      cnt ++
+            cnt ++
             var cur = new Date();
 			var rmsx = parseInt(field.field1);
 			var rmsy = parseInt(field.field2);
             data.addRows([[cur.getMinutes() + ":" + cur.getSeconds(), rmsx, rmsy]]);
-        //    if(cnt == points){
-          //      for (i = 0; i < points/2; i++) {
-            //        data.removeRow(i);
-              //  }
-               // cnt = i;
-           // }
-            //got = 0;
+            if(cnt == points){
+                for (i = 0; i < points/2; i++) {
+                    data.removeRow(i);
+                }
+                cnt = i;
+            }
+            got = 0;
             chart.draw(data, opt);
      });
-    }//else{
-        //got ++;
-        //if(got == points/3){
-        //   got = 0;        
-      //  }
-    //}  
+    }else{
+        got ++;
+        if(got == points/3){
+           got = 0;        
+        }
+    }
+}	
 setInterval(update, 6000);
 </script>
 </body>
