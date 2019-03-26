@@ -8,4 +8,4 @@ The code to pull the Vibration readings from thingspeak and show it in google ch
 ![Vibration Graph Graph](https://github.com/ncdcommunity/WL-Sense-ThingSpeak-Chart/blob/master/vibGraph.png)
 
 ## Visualization
-To visualize thw graphs you can visit [here](https://sites.google.com/view/webczartech/home)
+To visualize these graphs you can visit [here](https://sites.google.com/view/webczartech/home)
